@@ -1,5 +1,6 @@
 package com.bankid.rates
 
+import com.bankid.rates.client.Currency
 import com.bankid.rates.client.ExchangeRates
 import com.bankid.rates.client.ExchangeResponse
 import com.bankid.rates.client.RatesFetchService
@@ -34,12 +35,15 @@ class RatesService(val fetchService: RatesFetchService) {
         checkData()
         return comparisonCache[provider]?.comparison?.get(pair)?.let { rate ->
             val baseRate = getBaseRate(pair)
-            PairCompare(provider,pair, baseRate, rate , exchangeRatesCache[BASE_PROVIDER]?.date ?: LocalDate.now(), comparisonCache[provider]?.updated ?: LocalDate.now())
+            PairCompare(provider,pair, baseRate?.amount, baseRate?.rateString, rate , exchangeRatesCache[BASE_PROVIDER]?.date ?: LocalDate.now(), comparisonCache[provider]?.updated ?: LocalDate.now())
         }
     }
 
-    private fun getBaseRate(pair: String): BigDecimal {
+    private fun getBaseRateRate(pair: String): BigDecimal {
         return exchangeRatesCache[BASE_PROVIDER]?.tabulka?.radek?.find { it.code == pair.substring(3) }?.rateString ?: BigDecimal.ZERO
+    }
+    private fun getBaseRate(pair: String): Currency? {
+        return exchangeRatesCache[BASE_PROVIDER]?.tabulka?.radek?.find { it.code == pair.substring(3) }
     }
 
     private fun checkData() {
@@ -76,6 +80,6 @@ class RatesService(val fetchService: RatesFetchService) {
         }?.toMap() ?: emptyMap()
     }
 
-    data class PairCompare(val source:String , val pair: String, val cnbRate: Number, val rate: BigDecimal , val cnbDate: LocalDate, val rateDate: LocalDate)
+    data class PairCompare(val source:String, val pair: String, val amount: Int?, val cnbRate: BigDecimal?, val rate: BigDecimal, val cnbDate: LocalDate, val rateDate: LocalDate)
     data class Comparison(val updated: LocalDate, val comparison: Map<String, BigDecimal>)
 }
