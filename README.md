@@ -13,7 +13,7 @@ This project is a Spring Boot application written in Kotlin that fetches and com
 - Provides build in health check endpoint.
 
 ## Requirements
-- Java 11 or higher
+- Java 17 or higher
 - Kotlin 1.5 or higher
 - Gradle 6.8 or higher
 
