@@ -1,0 +1,19 @@
+
+spring:
+  application:
+      name: BankId Rates
+  security:
+    oauth2:
+      client:
+        registration:
+          google:
+            client-id: 193426463237-c9o53bnri25m6co4la4oj6mt5fk8hivd.apps.googleusercontent.com
+            client-secret: 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
+            scope: profile, email
+
+logging:
+  level:
+    root: INFO
+    org.springframework.web: DEBUG
+    org.springframework.security: DEBUG
+    org.springdoc.ui: DEBUG
