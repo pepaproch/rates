@@ -10,6 +10,7 @@ This project is a Spring Boot application written in Kotlin that fetches and com
 - Provides API documentation using OpenAPI.
 - Supports both JSON and XML responses.
 - Integrates with Google Authentication for secure access.
+- Provides build in health check endpoint.
 
 ## Requirements
 - Java 11 or higher
@@ -45,6 +46,14 @@ This project is a Spring Boot application written in Kotlin that fetches and com
     - **Method:** GET
     - **Produces:** `application/json`, `application/xml`
     - **Description:** Returns the comparison rate for the specified currency pair.
+
+
+- **Get Health**
+    - **URL:** `/actuator/health`
+    - **Method:** GET
+    - **Produces:** `application/json`
+    - **Description:** Returns the health status of the application.
+
 
 ## API Documentation
 API documentation and SwaggerUi is available at `/doc`.
