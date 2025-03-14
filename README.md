@@ -19,8 +19,8 @@ This project is a Spring Boot application written in Kotlin that fetches and com
 ## Setup
 1. Clone the repository:
    ```sh
-   git clone <repository-url>
-   cd <repository-directory>
+   git clone https://github.com/pepaproch/rates.git
+   cd rates
    ```
 
 2. Build the project:
@@ -47,7 +47,7 @@ This project is a Spring Boot application written in Kotlin that fetches and com
     - **Description:** Returns the comparison rate for the specified currency pair.
 
 ## API Documentation
-API documentation is available at `/doc`.
+API documentation and SwaggerUi is available at `/doc`.
 
 ## License
 This project is licensed under the MIT License.

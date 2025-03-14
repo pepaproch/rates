@@ -21,7 +21,6 @@ class SecurityConfig {
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
         http {
             authorizeHttpRequests {
-                authorize("/doc", permitAll)
                 authorize(anyRequest, authenticated)
             }
             oauth2Login {

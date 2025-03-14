@@ -10,13 +10,12 @@ import com.fasterxml.jackson.dataformat.xml.XmlMapper
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlElementWrapper
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlProperty
 import com.fasterxml.jackson.dataformat.xml.annotation.JacksonXmlRootElement
-import org.springframework.http.codec.xml.Jaxb2XmlDecoder
 
-
-import org.springframework.http.codec.xml.Jaxb2XmlEncoder
 import org.springframework.stereotype.Service
 import org.springframework.web.reactive.function.client.WebClient
 import java.math.BigDecimal
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 
 @Service
@@ -28,7 +27,7 @@ class RatesFetchService {
         .build()
 
     private val frankfurterApi = WebClient.builder()
-        .baseUrl("https://api.frankfurter.dev/v1/latest?base=CZK") // Upravte na skutečné API
+        .baseUrl("https://api.frankfurter.dev/v1/")
         .defaultHeader("Accept", "application/json")
         .build()
 
@@ -44,20 +43,16 @@ class RatesFetchService {
         return exchangeRates
     }
 
-    fun fetchComparsionRates(): ExchangeResponse? {
+    fun fetchComparsionRates(date: LocalDate): ExchangeResponse? {
+
+
       return frankfurterApi.get() // API endpoint
+          .uri(date.format(DateTimeFormatter.ISO_LOCAL_DATE) +"?base=CZK")
             .retrieve()
             .bodyToMono(ExchangeResponse::class.java)
             .block() // 🚀
 
-
     }
-
-
-
-
-
-
 
 
 }
@@ -73,7 +68,7 @@ data class ExchangeResponse(
 @JacksonXmlRootElement(localName = "kurzy")
 data class ExchangeRates(
     @JacksonXmlProperty(localName = "banka", isAttribute = true) val bank: String, // Atribut "banka"
-    @JacksonXmlProperty(localName = "datum", isAttribute = true) val date: String, // Atribut "datum"
+    @JacksonXmlProperty(localName = "datum", isAttribute = true)  @JsonDeserialize(using = CurrencyDeserializer.LocalDateDeserializer::class) val date: LocalDate, // Atribut "datum"
     @JacksonXmlProperty(localName = "poradi", isAttribute = true) val order: Int, // Atribut "poradi"
     @JacksonXmlProperty(localName = "tabulka") val tabulka: ExchangeTable // Vnořený element "tabulka"
 )
@@ -100,4 +95,14 @@ class CurrencyDeserializer : JsonDeserializer<BigDecimal>() {
     override fun deserialize(p: JsonParser, ctxt: DeserializationContext): BigDecimal {
         return BigDecimal(p.text.replace(",", ".")) // Převod desetinné čárky na tečku
     }
+
+    class LocalDateDeserializer : JsonDeserializer<LocalDate>() {
+        override fun deserialize(p: JsonParser, ctxt: DeserializationContext): LocalDate {
+            val formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy") // Define the format
+            return LocalDate.parse(p.text, formatter)
+
+        }
+
+    }
+
 }
